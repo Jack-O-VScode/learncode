@@ -21,7 +21,7 @@ const ROOT = resolve(HERE, '..')
 
 const KNOWN_LANGS = new Set([
   'python', 'cpp', 'html', 'css', 'js', 'glsl', 'text', 'bash',
-  'json', 'toml', 'cmake',
+  'json', 'toml', 'cmake', 'powershell', 'sql',
 ])
 const LEVELS = ['beginner', 'amateur', 'intermediate', 'skilled', 'pro']
 

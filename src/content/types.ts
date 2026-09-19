@@ -64,6 +64,8 @@ export type CodeLang =
   | 'json'
   | 'toml'
   | 'cmake'
+  | 'powershell'
+  | 'sql'
 
 export type Question =
   | {

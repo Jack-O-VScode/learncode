@@ -112,6 +112,31 @@ const BASH_KEYWORDS = new Set([
   'cmake', 'make', 'npm', 'node', 'git',
 ])
 
+// PowerShell keywords are case-insensitive; the samples use the lowercase forms.
+const PS_KEYWORDS = new Set([
+  'begin', 'break', 'catch', 'continue', 'do', 'else', 'elseif', 'end',
+  'filter', 'finally', 'for', 'foreach', 'function', 'if', 'in', 'param',
+  'process', 'return', 'switch', 'throw', 'trap', 'try', 'until', 'while',
+])
+const PS_TYPES = new Set([
+  '$true', '$false', '$null', '$_', '$PSItem', '$args', '$error',
+])
+
+// SQL keywords written uppercase in the samples, which is the usual convention.
+const SQL_KEYWORDS = new Set([
+  'SELECT', 'FROM', 'WHERE', 'INSERT', 'INTO', 'VALUES', 'UPDATE', 'SET',
+  'DELETE', 'CREATE', 'TABLE', 'DROP', 'ALTER', 'ADD', 'JOIN', 'LEFT', 'RIGHT',
+  'INNER', 'OUTER', 'FULL', 'CROSS', 'ON', 'AND', 'OR', 'NOT', 'NULL', 'LIKE',
+  'ORDER', 'BY', 'GROUP', 'HAVING', 'LIMIT', 'OFFSET', 'UNION', 'ALL', 'AS',
+  'IN', 'IS', 'EXISTS', 'BETWEEN', 'DISTINCT', 'PRIMARY', 'KEY', 'FOREIGN',
+  'REFERENCES', 'DEFAULT', 'INDEX', 'UNIQUE', 'CONSTRAINT', 'GRANT', 'REVOKE',
+  'BEGIN', 'COMMIT', 'ROLLBACK', 'CASE', 'WHEN', 'THEN', 'END', 'INT',
+  'INTEGER', 'TEXT', 'VARCHAR', 'BOOLEAN', 'DATE', 'TIMESTAMP', 'SERIAL',
+])
+const SQL_TYPES = new Set([
+  'COUNT', 'SUM', 'AVG', 'MIN', 'MAX', 'TRUE', 'FALSE',
+])
+
 interface LangConfig {
   lineComments: string[]
   blockComment?: [string, string]
@@ -173,6 +198,18 @@ const CONFIGS: Record<Exclude<CodeLang, 'html' | 'text'>, LangConfig> = {
     lineComments: ['#'],
     keywords: CMAKE_KEYWORDS,
     types: new Set(),
+  },
+  powershell: {
+    lineComments: ['#'],
+    blockComment: ['<#', '#>'],
+    keywords: PS_KEYWORDS,
+    types: PS_TYPES,
+  },
+  sql: {
+    lineComments: ['--'],
+    blockComment: ['/*', '*/'],
+    keywords: SQL_KEYWORDS,
+    types: SQL_TYPES,
   },
 }
 

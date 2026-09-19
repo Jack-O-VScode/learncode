@@ -14,6 +14,8 @@ const LANG_LABEL: Record<CodeLang, string> = {
   json: 'JSON',
   toml: 'TOML',
   cmake: 'CMake',
+  powershell: 'PowerShell',
+  sql: 'SQL',
 }
 
 interface Props {

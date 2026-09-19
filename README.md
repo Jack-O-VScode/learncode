@@ -54,6 +54,16 @@ mostly clicking things in the Supabase dashboard.
 
 ---
 
+## Live site
+
+```
+https://jack-o-vscode.github.io/learncode/
+```
+
+Published by `.github/workflows/deploy.yml` on every push. It needs switching
+on once: **Settings → Pages → Build and deployment → Source → GitHub
+Actions**.
+
 ## Install it as an app
 
 It is a Progressive Web App, so it installs from the browser with no app store.

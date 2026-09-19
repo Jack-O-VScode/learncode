@@ -142,6 +142,27 @@ The app is a static site, so this is free on any of these.
 Because the keys are committed in `supabaseConfig.ts`, there is nothing to
 configure on the host — just deploy.
 
+### GitHub Pages (no signup, already wired up)
+
+`.github/workflows/deploy.yml` builds and publishes on every push. You only
+have to switch it on once:
+
+**Settings** → **Pages** → **Build and deployment** → **Source** →
+**GitHub Actions**
+
+Then push anything (or **Actions** → *Deploy to GitHub Pages* → **Run
+workflow**) and it appears at:
+
+```
+https://jack-o-vscode.github.io/learncode/
+```
+
+The workflow builds with `BASE_PATH=/learncode/`, because Pages serves a
+project site from a subpath rather than the root, and copies `index.html` to
+`404.html` so that deep links like `/learncode/track/python/beginner` still
+work — Pages has no rewrite rules, so it serves `404.html` for any path
+without a file, and the app boots from there and reads the URL.
+
 ### Vercel
 
 ```bash

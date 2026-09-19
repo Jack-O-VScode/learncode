@@ -6,9 +6,14 @@ import { AuthProvider } from './lib/auth'
 import { ProgressProvider } from './lib/progress'
 import './styles.css'
 
+// On GitHub Pages the app lives at /learncode/, not at the root. Vite exposes
+// that as BASE_URL, and the router has to be told or every link 404s.
+// React Router wants no trailing slash: '/learncode', or '' at the root.
+const basename = import.meta.env.BASE_URL.replace(/\/$/, '')
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename={basename}>
       <AuthProvider>
         <ProgressProvider>
           <App />

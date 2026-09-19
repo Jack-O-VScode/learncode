@@ -2,10 +2,17 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
+// Where the app is served from.
+//   '/'           — local dev, Vercel, Netlify, any root domain
+//   '/learncode/' — GitHub Pages, which serves a project site from a subpath
+// The deploy workflow sets BASE_PATH; everything else gets the root.
+const base = process.env.BASE_PATH ?? '/'
+
 // The app ships as a PWA so it can be installed as a real app:
 //   iPhone  -> Safari -> Share -> "Add to Home Screen"
 //   Windows -> Edge/Chrome -> install icon in the address bar
 export default defineConfig({
+  base,
   plugins: [
     react(),
     VitePWA({
@@ -18,7 +25,9 @@ export default defineConfig({
         'icons/icon-maskable-512.png',
       ],
       manifest: {
-        id: '/',
+        // Must match where the app is actually served, or the install prompt
+        // never appears and the installed app opens on the wrong URL.
+        id: base,
         name: 'LearnCode — Python, HTML & C++',
         short_name: 'LearnCode',
         description:
@@ -27,8 +36,8 @@ export default defineConfig({
         background_color: '#0b1020',
         display: 'standalone',
         orientation: 'portrait-primary',
-        scope: '/',
-        start_url: '/',
+        scope: base,
+        start_url: base,
         categories: ['education', 'developer', 'productivity'],
         icons: [
           { src: 'icons/icon-192.png', sizes: '192x192', type: 'image/png' },
@@ -44,7 +53,7 @@ export default defineConfig({
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,woff2}'],
         // Lesson content is bundled into the JS, so the whole course works offline.
-        navigateFallback: 'index.html',
+        navigateFallback: `${base}index.html`,
         navigateFallbackDenylist: [/^\/api/],
         runtimeCaching: [
           {

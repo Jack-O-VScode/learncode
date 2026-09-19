@@ -1,0 +1,79 @@
+name: Deploy to GitHub Pages
+
+# Builds the app and publishes it to
+#   https://jack-o-vscode.github.io/learncode/
+# on every push. Nothing to install, no third-party account.
+#
+# One-time setup in the repo: Settings -> Pages -> Build and deployment ->
+# Source -> "GitHub Actions". The configure-pages step below tries to do that
+# automatically, but the setting is the fallback if it cannot.
+
+on:
+  push:
+    branches:
+      - claude/coding-learning-webapp-1o2pgp
+      - main
+  workflow_dispatch: # lets you re-deploy by hand from the Actions tab
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Never let two deploys race; let a newer push supersede an in-flight one.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # Fails the deploy if a lesson is malformed or a question's own model
+      # answer no longer passes its grader.
+      - name: Verify course content
+        run: npm run verify-content
+
+      - name: Build
+        env:
+          # GitHub Pages serves a project site from a subpath, not the root.
+          BASE_PATH: /learncode/
+        run: npm run build
+
+      - name: Add SPA fallback and disable Jekyll
+        run: |
+          # Pages has no rewrite rules, so a deep link like
+          # /learncode/track/python/beginner has no file to serve and returns
+          # 404.html. Making that a copy of index.html boots the app, and the
+          # router then reads the URL and renders the right page.
+          cp dist/index.html dist/404.html
+          # Without this, Pages runs Jekyll, which ignores files starting with
+          # an underscore.
+          touch dist/.nojekyll
+
+      - uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

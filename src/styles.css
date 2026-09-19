@@ -694,6 +694,27 @@ button {
   font-size: 0.85rem;
 }
 
+.mode-card.disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.mode-card.disabled:hover {
+  transform: none;
+  border-color: var(--line);
+}
+
+.mode-soon {
+  align-self: flex-start;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border: 1px dashed var(--line-strong);
+  border-radius: 999px;
+  padding: 0.2rem 0.7rem;
+}
+
 /* -------------------------------- levels ----------------------------------- */
 
 .levels-title {

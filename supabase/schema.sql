@@ -104,8 +104,10 @@ create table if not exists public.progress (
 
   primary key (user_id, track, level),
 
+  -- Track ids are validated by shape rather than a fixed list, so adding new
+  -- courses (like the cybersecurity modes) never needs a database migration.
   constraint progress_track_valid
-    check (track in ('python', 'html', 'cpp', 'cpp-gl')),
+    check (track ~ '^[a-z0-9-]+$' and char_length(track) between 2 and 40),
   constraint progress_level_valid
     check (level in ('beginner', 'amateur', 'intermediate', 'skilled', 'pro')),
   constraint progress_step_index_sane
@@ -139,6 +141,20 @@ drop policy if exists "delete own progress" on public.progress;
 create policy "delete own progress"
   on public.progress for delete
   using (auth.uid() = user_id);
+
+
+-- ===========================================================================
+--  2b. MIGRATION for databases created before the cybersecurity tracks
+--
+--  `create table if not exists` above does nothing to a table that already
+--  exists, so a database set up with the original four-track whitelist would
+--  reject the new 'blue-*' and 'red-*' track ids. This block relaxes the
+--  check to the shape-based rule. It is safe to run every time.
+-- ===========================================================================
+
+alter table public.progress drop constraint if exists progress_track_valid;
+alter table public.progress add constraint progress_track_valid
+  check (track ~ '^[a-z0-9-]+$' and char_length(track) between 2 and 40);
 
 
 -- ===========================================================================

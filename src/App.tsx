@@ -3,7 +3,7 @@ import { useAuth } from './lib/auth'
 import { Layout } from './components/Layout'
 import { AuthPage } from './pages/AuthPage'
 import { HomePage } from './pages/HomePage'
-import { CppModePage } from './pages/CppModePage'
+import { ModeChooserPage } from './pages/ModeChooserPage'
 import { LevelsPage } from './pages/LevelsPage'
 import { LessonPage } from './pages/LessonPage'
 import { ProfilePage } from './pages/ProfilePage'
@@ -28,7 +28,9 @@ export function App() {
     <Layout>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/cpp" element={<CppModePage />} />
+        <Route path="/modes/:cardId" element={<ModeChooserPage />} />
+        {/* Old link + cached PWA path from before the chooser was generalised. */}
+        <Route path="/cpp" element={<Navigate to="/modes/cpp" replace />} />
         <Route path="/track/:trackId" element={<LevelsPage />} />
         <Route path="/track/:trackId/:levelId" element={<LessonPage />} />
         <Route path="/me" element={<ProfilePage />} />

@@ -67,7 +67,7 @@ export function HomePage() {
           const done = stats.reduce((sum, s) => sum + s.done, 0)
           const total = stats.reduce((sum, s) => sum + s.total, 0)
           const pct = total === 0 ? 0 : Math.round((done / total) * 100)
-          const href = isMulti ? '/cpp' : `/track/${lang.tracks[0]}`
+          const href = isMulti ? `/modes/${lang.id}` : `/track/${lang.tracks[0]}`
 
           return (
             <Link
@@ -97,18 +97,18 @@ export function HomePage() {
         <div className="how-grid">
           <div>
             <span className="how-num">1</span>
-            <h3>Pick a language</h3>
+            <h3>Pick a subject</h3>
             <p>
-              Python, HTML or C++. C++ then asks whether you want plain C++ or the OpenGL mode,
-              where every idea is taught by drawing something on screen.
+              Python, HTML, C++, or cybersecurity — defensive or offensive. C++ and the two
+              security cards then ask you to pick a mode, like Linux or Windows.
             </p>
           </div>
           <div>
             <span className="how-num">2</span>
             <h3>Pick a difficulty</h3>
             <p>
-              Beginner assumes you have never written a line of code in your life. Pro goes all
-              the way to the parts most people never learn.
+              Beginner assumes no background at all — no code, no security. Pro goes all the way to
+              the parts most people never learn.
             </p>
           </div>
           <div>

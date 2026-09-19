@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
-import { getLevel, getTrack } from '../content'
+import { cardForTrack, getLevel, getTrack } from '../content'
 import { LEVEL_META, LEVEL_ORDER, type LevelId } from '../content/types'
 import { useProgress, type AnswerOutcome } from '../lib/progress'
 import { levelStats } from '../lib/stats'
@@ -75,9 +75,12 @@ export function LessonPage() {
   )
 
   if (!track || !level) return <Navigate to="/" replace />
+  // A level with no steps (e.g. content still being written) must not crash.
+  if (level.steps.length === 0) return <Navigate to={`/track/${track.id}`} replace />
 
   const step = level.steps[index]
   const meta = LEVEL_META[level.id]
+  const crumbCard = cardForTrack(track.id)
   const isLast = index === level.steps.length - 1
   const stepDone = record?.completed.includes(step.id) ?? false
   const levelPosition = LEVEL_ORDER.indexOf(level.id)
@@ -150,10 +153,10 @@ export function LessonPage() {
 
       <nav className="crumbs">
         <Link to="/">Languages</Link>
-        {(track.id === 'cpp' || track.id === 'cpp-gl') && (
+        {crumbCard && (
           <>
             <span>/</span>
-            <Link to="/cpp">C++</Link>
+            <Link to={`/modes/${crumbCard.id}`}>{crumbCard.name}</Link>
           </>
         )}
         <span>/</span>

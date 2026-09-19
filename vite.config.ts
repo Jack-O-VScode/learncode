@@ -81,6 +81,8 @@ export default defineConfig({
           if (id.includes('/src/content/html/')) return 'course-html'
           if (id.includes('/src/content/cpp-gl/')) return 'course-cpp-gl'
           if (id.includes('/src/content/cpp/')) return 'course-cpp'
+          if (id.includes('/src/content/blue-')) return 'course-defensive'
+          if (id.includes('/src/content/red-')) return 'course-offensive'
           if (id.includes('/node_modules/@supabase/')) return 'supabase'
           if (id.includes('/node_modules/')) return 'vendor'
           return undefined

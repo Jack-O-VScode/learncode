@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
-import { getTrack } from '../content'
+import { cardForTrack, getTrack } from '../content'
 import { LEVEL_META, LEVEL_ORDER } from '../content/types'
 import { useProgress } from '../lib/progress'
 import { levelStats } from '../lib/stats'
@@ -13,16 +13,16 @@ export function LevelsPage() {
 
   if (!track) return <Navigate to="/" replace />
 
-  const isCpp = track.id === 'cpp' || track.id === 'cpp-gl'
+  const card = cardForTrack(track.id)
 
   return (
     <div className="levels-wrap" style={{ '--accent': track.accent } as CSSProperties}>
       <nav className="crumbs">
         <Link to="/">Languages</Link>
-        {isCpp && (
+        {card && (
           <>
             <span>/</span>
-            <Link to="/cpp">C++</Link>
+            <Link to={`/modes/${card.id}`}>{card.name}</Link>
           </>
         )}
         <span>/</span>

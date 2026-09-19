@@ -137,13 +137,27 @@ export interface Level {
   steps: Step[]
 }
 
-export type TrackId = 'python' | 'html' | 'cpp' | 'cpp-gl'
+export type TrackId =
+  | 'python'
+  | 'html'
+  | 'cpp'
+  | 'cpp-gl'
+  // Defensive cybersecurity (blue team), one track per platform.
+  | 'blue-linux'
+  | 'blue-windows'
+  | 'blue-network'
+  | 'blue-web'
+  // Offensive cybersecurity (red team), authorized-testing framed.
+  | 'red-linux'
+  | 'red-windows'
+  | 'red-network'
+  | 'red-web'
 
 export interface Track {
   id: TrackId
   name: string
-  /** The language family, used for the icon and highlighter defaults. */
-  language: 'python' | 'html' | 'cpp'
+  /** The subject family. Informational only (not wired to anything yet). */
+  language: 'python' | 'html' | 'cpp' | 'security'
   tagline: string
   description: string
   accent: string

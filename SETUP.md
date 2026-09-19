@@ -71,28 +71,57 @@ creating an account signs you straight in.
 1. **Project Settings** (the gear) → **API**
 2. Copy **Project URL** and the **anon** / **public** key
 
+Then edit [`src/lib/supabaseConfig.ts`](src/lib/supabaseConfig.ts) and replace
+the two placeholders:
+
+```ts
+export const SUPABASE_URL = 'https://abcdefghijklm.supabase.co'
+export const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+```
+
+That is it — those values are committed, so the app works everywhere with no
+further setup: clone it, deploy it, and it connects.
+
+Restart the dev server (`Ctrl+C`, then `npm run dev`). The pill in the top bar
+should now say **Saved to cloud**.
+
+### If you would rather not commit them
+
+A `.env` file wins over the committed values, so you can leave the
+placeholders alone and do this instead:
+
 ```bash
 cp .env.example .env
 ```
-
-Then edit `.env`:
 
 ```
 VITE_SUPABASE_URL=https://abcdefghijklm.supabase.co
 VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
 
-Restart the dev server (`Ctrl+C`, then `npm run dev`). The pill in the top bar
-should now say **Saved to cloud**.
+`.env` is gitignored. When deploying, add the same two names as environment
+variables in your host's dashboard.
 
-### Is the anon key safe to publish?
+### Is the anon key safe to have in the repo?
 
-Yes. It is designed to ship inside browser apps — it only says "a request is
-coming from this project". What actually protects the data is Row Level
-Security, which the schema turns on for every table.
+Largely, yes — and it is worth understanding exactly why.
 
-**Never** put the `service_role` key in this file. That one bypasses every
-security rule.
+The anon key is the **public** key. It is designed to sit inside browser apps,
+and **anyone who visits your deployed site can read it out of the JavaScript
+bundle** whether or not you commit it. So committing it changes very little
+about who can obtain it.
+
+What actually protects the data is **Row Level Security**, which the schema
+switches on for every table: each account can only ever read and write its own
+rows, and holding the key does not change that.
+
+What the key *does* allow is **creating an account**. If you want to stop that
+once you and your friends have registered, it is one toggle and no code
+change: Authentication → Sign In / Providers → Email → turn *Allow new users
+to sign up* **off**. Existing accounts keep working.
+
+**Never** commit the `service_role` key. That one bypasses every security rule
+and belongs only on a server.
 
 ---
 
@@ -110,15 +139,15 @@ security rule.
 
 The app is a static site, so this is free on any of these.
 
+Because the keys are committed in `supabaseConfig.ts`, there is nothing to
+configure on the host — just deploy.
+
 ### Vercel
 
 ```bash
 npm install -g vercel
 vercel
 ```
-
-Then in the Vercel dashboard → **Settings** → **Environment Variables**, add
-`VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`, and redeploy.
 
 ### Netlify
 
@@ -127,12 +156,13 @@ npm run build
 npx netlify deploy --prod --dir=dist
 ```
 
-Add the same two variables under **Site settings** → **Environment variables**.
-
 ### Cloudflare Pages / GitHub Pages
 
-Build command `npm run build`, output directory `dist`. Add the two variables
-in the project settings.
+Build command `npm run build`, output directory `dist`.
+
+> If you chose the `.env` route instead of committing the keys, add
+> `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` as environment variables in
+> the host's dashboard and redeploy.
 
 > **One thing to configure on any host:** this is a single-page app, so all
 > routes must serve `index.html`. Vercel and Netlify do this automatically for
@@ -152,9 +182,11 @@ Step 4. Turn *Confirm email* off, then sign in normally.
 Authentication → Sign In / Providers → Email → enable *Allow new users to sign up*.
 
 **Top bar says "Local only" after adding keys**
-The dev server reads `.env` at startup — restart it. Check the file is called
-exactly `.env`, sits next to `package.json`, and that the variable names start
-with `VITE_` (Vite only exposes variables with that prefix).
+Restart the dev server — it reads config at startup. Check that
+`src/lib/supabaseConfig.ts` no longer contains `YOUR-PROJECT-REF`. If you used
+`.env` instead, check the file is called exactly `.env`, sits next to
+`package.json`, and that the variable names start with `VITE_` (Vite only
+exposes variables with that prefix).
 
 **Top bar says "Saved on device"**
 The app reached for Supabase and could not get there. Check your connection and

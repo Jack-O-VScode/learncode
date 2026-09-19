@@ -144,8 +144,9 @@ export function AuthPage() {
         {!isCloudMode && (
           <p className="auth-warn">
             <strong>Local mode:</strong> {cloudModeNote()}. Your account and progress will be
-            saved in this browser only. Add your Supabase URL and anon key to <code>.env</code>{' '}
-            (see <code>SETUP.md</code>) to sync across devices.
+            saved in this browser only. Put your Supabase URL and anon key in{' '}
+            <code>src/lib/supabaseConfig.ts</code> (or a <code>.env</code> file) to sync across
+            devices — see <code>SETUP.md</code>.
           </p>
         )}
       </div>

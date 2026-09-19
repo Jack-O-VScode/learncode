@@ -42,9 +42,15 @@ npm install
 npm run dev
 ```
 
-It works straight away in **local mode** (accounts and progress stored in that
-browser). To sync across devices, follow **[SETUP.md](SETUP.md)** — it takes
-about ten minutes and is mostly clicking things in the Supabase dashboard.
+The Supabase connection is committed in
+[`src/lib/supabaseConfig.ts`](src/lib/supabaseConfig.ts), so there is nothing
+to configure — clone it and it connects, deploy it and it connects. Nobody
+ever types a key; your friends only see an email and password box.
+
+If those values are still placeholders it runs in **local mode** instead
+(accounts and progress stored in that browser only). **[SETUP.md](SETUP.md)**
+walks through creating the project and filling them in — about ten minutes,
+mostly clicking things in the Supabase dashboard.
 
 ---
 
@@ -91,7 +97,8 @@ Supabase keys configured).
 ## Accounts
 
 Sign-in is by email and password, stored in your own Supabase project's
-`auth.users` table — Dashboard → Authentication → Users.
+`auth.users` table — Dashboard → Authentication → Users. The API key is
+compiled into the build, so it is never typed by anyone.
 
 The password is stored as a **bcrypt hash**, not as plain text. That is
 deliberate: if the database ever leaked, plaintext passwords would give an

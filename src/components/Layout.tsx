@@ -11,6 +11,7 @@ function SyncPill() {
     saved: 'Saved to cloud',
     offline: 'Saved on device',
     local: 'Local only',
+    setup: 'Set up needed',
   }
   const title: Record<typeof sync, string> = {
     idle: 'Connected',
@@ -18,6 +19,9 @@ function SyncPill() {
     saved: 'Your progress is safe in the cloud',
     offline: 'No connection to Supabase — progress is kept here and will sync later',
     local: 'No Supabase keys configured, so progress lives in this browser only',
+    setup:
+      'Connected to Supabase, but the tables are missing. ' +
+      'Run supabase/schema.sql in the SQL editor. Progress is safe here meanwhile.',
   }
   return (
     <span className={`sync-pill ${sync}`} title={title[sync]}>

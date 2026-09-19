@@ -68,7 +68,26 @@ function mergeProgress(a: LevelProgress, b: LevelProgress): LevelProgress {
   }
 }
 
-type SyncState = 'idle' | 'saving' | 'saved' | 'offline' | 'local'
+type SyncState = 'idle' | 'saving' | 'saved' | 'offline' | 'local' | 'setup'
+
+/**
+ * Tells "the tables do not exist yet" apart from "the network is down".
+ *
+ * Both otherwise surface as a failed request, but they need opposite
+ * responses: one is fixed by running `supabase/schema.sql`, the other by
+ * waiting. Postgres reports a missing relation as 42P01; PostgREST reports a
+ * table missing from its schema cache as PGRST205/PGRST106.
+ */
+function isMissingTable(error: { code?: string; message?: string }): boolean {
+  const code = error.code ?? ''
+  if (code === '42P01' || code === 'PGRST205' || code === 'PGRST106') return true
+  const message = (error.message ?? '').toLowerCase()
+  return (
+    message.includes('does not exist') ||
+    message.includes('could not find the table') ||
+    message.includes('schema cache')
+  )
+}
 
 interface ProgressState {
   progress: ProgressMap
@@ -184,8 +203,16 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
       .upsert(rows, { onConflict: 'user_id,track,level' })
 
     if (error) {
-      console.warn('[learncode] progress save failed, will retry:', error.message)
-      setSync('offline')
+      if (isMissingTable(error)) {
+        console.warn(
+          '[learncode] the `progress` table does not exist. ' +
+            'Run supabase/schema.sql in the Supabase SQL editor.',
+        )
+        setSync('setup')
+      } else {
+        console.warn('[learncode] progress save failed, will retry:', error.message)
+        setSync('offline')
+      }
       return // keys stay in `pending` and go up with the next save
     }
     for (const key of keys) pending.current.delete(key)
@@ -220,8 +247,16 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
       if (!active) return
 
       if (error) {
-        console.warn('[learncode] could not load cloud progress:', error.message)
-        setSync('offline')
+        if (isMissingTable(error)) {
+          console.warn(
+            '[learncode] the `progress` table does not exist. ' +
+              'Run supabase/schema.sql in the Supabase SQL editor.',
+          )
+          setSync('setup')
+        } else {
+          console.warn('[learncode] could not load cloud progress:', error.message)
+          setSync('offline')
+        }
         setReady(true)
         return
       }

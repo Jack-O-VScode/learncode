@@ -243,6 +243,12 @@ button {
 .sync-pill.saving i { background: var(--warn); animation: pulse 1s infinite; }
 .sync-pill.offline i { background: var(--bad); }
 .sync-pill.local i { background: var(--warn); }
+.sync-pill.setup i { background: var(--warn); }
+
+.sync-pill.setup {
+  color: var(--warn);
+  border-color: color-mix(in srgb, var(--warn) 45%, transparent);
+}
 
 .page {
   flex: 1;

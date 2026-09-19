@@ -92,7 +92,10 @@ function friendlyError(message: string): string {
     return 'New sign-ups are switched off in Supabase. Dashboard → Authentication → Sign In / Providers → Email → enable "Allow new users to sign up".'
   }
   if (m.includes('failed to fetch') || m.includes('network')) {
-    return 'Could not reach Supabase. Check your internet connection and that VITE_SUPABASE_URL is correct.'
+    return 'Could not reach Supabase. Check your internet connection, and that the project URL in src/lib/supabaseConfig.ts is still correct (a paused or deleted project fails the same way).'
+  }
+  if (m.includes('invalid api key') || m.includes('no api key')) {
+    return 'Supabase rejected the API key. Copy the anon/public key again from Project Settings → API Keys, using the Copy button so it is not truncated.'
   }
   return message
 }

@@ -34,15 +34,14 @@
 export const SUPABASE_URL = 'https://gsqshsxlnpcmccoqnogp.supabase.co'
 
 /**
- * Still to fill in. Dashboard -> Project Settings -> API Keys, and use the
- * **Copy** button rather than selecting the text — the key is long and gets
- * truncated easily.
+ * The `anon` (public) key for the project above. Its payload decodes to
+ * `{"iss":"supabase","ref":"gsqshsxlnpcmccoqnogp","role":"anon",…}` — note
+ * `role: anon`, not `service_role`.
  *
- * It will look like one of these two shapes:
- *   eyJhbGci....eyJpc3Mi....<signature>   (legacy anon key: THREE dot-separated
- *                                          parts, 200+ characters)
- *   sb_publishable_xxxxxxxxxxxxxxxxxxxx   (newer publishable key)
- *
- * Both work. Do NOT use the `service_role` or `secret` key.
+ * To replace it: Dashboard -> Project Settings -> API Keys, and use the
+ * **Copy** button rather than selecting the text; the key wraps across lines
+ * and is easy to truncate. It must have three dot-separated parts (or start
+ * with `sb_publishable_`), which `supabase.ts` checks before using it.
  */
-export const SUPABASE_ANON_KEY = 'YOUR-ANON-PUBLIC-KEY'
+export const SUPABASE_ANON_KEY =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdzcXNoc3hsbnBjbWNjb3Fub2dwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk3NDcwMjEsImV4cCI6MjEwNTMyMzAyMX0.artRvFHSGSlx0449zl42zkypHtRvA6NeHOzNXJAJ7uY'

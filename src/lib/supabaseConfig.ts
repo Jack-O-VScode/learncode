@@ -31,6 +31,18 @@
  * local checkout at a different project without editing this file.
  */
 
-export const SUPABASE_URL = 'https://YOUR-PROJECT-REF.supabase.co'
+export const SUPABASE_URL = 'https://gsqshsxlnpcmccoqnogp.supabase.co'
 
+/**
+ * Still to fill in. Dashboard -> Project Settings -> API Keys, and use the
+ * **Copy** button rather than selecting the text — the key is long and gets
+ * truncated easily.
+ *
+ * It will look like one of these two shapes:
+ *   eyJhbGci....eyJpc3Mi....<signature>   (legacy anon key: THREE dot-separated
+ *                                          parts, 200+ characters)
+ *   sb_publishable_xxxxxxxxxxxxxxxxxxxx   (newer publishable key)
+ *
+ * Both work. Do NOT use the `service_role` or `secret` key.
+ */
 export const SUPABASE_ANON_KEY = 'YOUR-ANON-PUBLIC-KEY'

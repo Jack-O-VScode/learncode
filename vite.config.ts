@@ -70,9 +70,11 @@ export default defineConfig({
     outDir: 'dist',
     sourcemap: false,
     // The whole course is bundled on purpose — it is what makes every lesson
-    // work offline once the service worker has cached it. Splitting it per
-    // track lets the browser fetch them in parallel, and means editing one
-    // track only invalidates that chunk for returning visitors.
+    // work offline once the service worker has cached it. Splitting it one
+    // chunk per track (not per card) lets the browser fetch them in parallel,
+    // keeps each chunk small, and means editing one track only invalidates
+    // that chunk for returning visitors. The two cyber cards carry four
+    // tracks each, so they are split per track to stay well under the limit.
     chunkSizeWarningLimit: 700,
     rollupOptions: {
       output: {
@@ -81,8 +83,9 @@ export default defineConfig({
           if (id.includes('/src/content/html/')) return 'course-html'
           if (id.includes('/src/content/cpp-gl/')) return 'course-cpp-gl'
           if (id.includes('/src/content/cpp/')) return 'course-cpp'
-          if (id.includes('/src/content/blue-')) return 'course-defensive'
-          if (id.includes('/src/content/red-')) return 'course-offensive'
+          // One chunk per cybersecurity track (blue-linux, red-web, …).
+          const cyber = id.match(/\/src\/content\/((?:blue|red)-[a-z]+)\//)
+          if (cyber) return `course-${cyber[1]}`
           if (id.includes('/node_modules/@supabase/')) return 'supabase'
           if (id.includes('/node_modules/')) return 'vendor'
           return undefined

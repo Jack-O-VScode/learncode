@@ -10,7 +10,7 @@ import {
 } from 'react'
 import { supabase } from './supabase'
 import { useAuth } from './auth'
-import type { LevelId, TrackId } from '../content/types'
+import { LEVEL_ORDER, type LevelId, type TrackId } from '../content/types'
 
 /**
  * Progress is saved after **every single answer**, so closing the tab halfway
@@ -112,6 +112,10 @@ interface ProgressState {
   /** Moves the resume point without grading anything (plain navigation). */
   setStepIndex: (track: TrackId, level: LevelId, stepIndex: number) => void
   resetLevel: (track: TrackId, level: LevelId) => void
+  /** Clears every level of one track (all five). */
+  resetTrack: (track: TrackId) => void
+  /** Clears progress across every track — a clean slate. */
+  resetAll: () => void
 }
 
 const ProgressContext = createContext<ProgressState | null>(null)
@@ -355,6 +359,43 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
     [commit],
   )
 
+  /**
+   * Resets many keys at once in a single state write and a single cloud flush.
+   * Writing an empty row (rather than deleting) reuses the tested save path;
+   * it clears this device and the cloud copy. A second device that still holds
+   * unsynced local progress could re-merge it — the same "keep the most work"
+   * rule that protects against accidental loss everywhere else.
+   */
+  const resetKeys = useCallback(
+    (keys: string[]) => {
+      if (!user || keys.length === 0) return
+      const now = new Date().toISOString()
+      setProgress((prev) => {
+        const next = { ...prev }
+        for (const key of keys) next[key] = { ...emptyProgress(), updatedAt: now }
+        latest.current = next
+        writeLocal(user.id, next)
+        return next
+      })
+      for (const key of keys) pending.current.add(key)
+      chain.current = chain.current
+        .then(() => flush(user.id, latest.current))
+        .catch(() => undefined)
+    },
+    [user, flush],
+  )
+
+  const resetTrack = useCallback<ProgressState['resetTrack']>(
+    (track) => {
+      resetKeys(LEVEL_ORDER.map((level) => progressKey(track, level)))
+    },
+    [resetKeys],
+  )
+
+  const resetAll = useCallback<ProgressState['resetAll']>(() => {
+    resetKeys(Object.keys(latest.current))
+  }, [resetKeys])
+
   const get = useCallback<ProgressState['get']>(
     (track, level) => progress[progressKey(track, level)] ?? emptyProgress(),
     [progress],
@@ -371,8 +412,18 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
   }, [user, flush])
 
   const value = useMemo<ProgressState>(
-    () => ({ progress, ready, sync, get, recordAnswer, setStepIndex, resetLevel }),
-    [progress, ready, sync, get, recordAnswer, setStepIndex, resetLevel],
+    () => ({
+      progress,
+      ready,
+      sync,
+      get,
+      recordAnswer,
+      setStepIndex,
+      resetLevel,
+      resetTrack,
+      resetAll,
+    }),
+    [progress, ready, sync, get, recordAnswer, setStepIndex, resetLevel, resetTrack, resetAll],
   )
 
   return <ProgressContext.Provider value={value}>{children}</ProgressContext.Provider>

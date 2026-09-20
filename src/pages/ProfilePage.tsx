@@ -31,8 +31,8 @@ export function ProfilePage() {
         <div>
           <h1>{user?.email}</h1>
           <p>
-            {done} of {total} steps finished across all four tracks · {correct} correct first try
-            out of {answers} answers
+            {done} of {total} steps finished across all {all.length} tracks · {correct} correct
+            first try out of {answers} answers
           </p>
           <p className={`storage-note ${isCloudMode ? 'cloud' : 'local'}`}>
             {isCloudMode

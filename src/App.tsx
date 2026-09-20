@@ -7,6 +7,7 @@ import { ModeChooserPage } from './pages/ModeChooserPage'
 import { LevelsPage } from './pages/LevelsPage'
 import { LessonPage } from './pages/LessonPage'
 import { ProfilePage } from './pages/ProfilePage'
+import { SettingsPage } from './pages/SettingsPage'
 import { InstallPage } from './pages/InstallPage'
 
 export function App() {
@@ -34,6 +35,7 @@ export function App() {
         <Route path="/track/:trackId" element={<LevelsPage />} />
         <Route path="/track/:trackId/:levelId" element={<LessonPage />} />
         <Route path="/me" element={<ProfilePage />} />
+        <Route path="/settings" element={<SettingsPage />} />
         <Route path="/install" element={<InstallPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

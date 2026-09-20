@@ -21,6 +21,29 @@
     <link rel="apple-touch-icon" href="/icons/apple-touch-icon-180.png" />
 
     <title>LearnCode</title>
+
+    <!--
+      Set the colour theme before the first paint, so a light-theme user never
+      sees a flash of the dark default. Mirrors src/lib/theme.tsx exactly:
+      a saved choice wins, otherwise the OS preference, otherwise dark.
+    -->
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.getItem('learncode.theme')
+          var theme =
+            saved === 'light' || saved === 'dark'
+              ? saved
+              : window.matchMedia &&
+                  window.matchMedia('(prefers-color-scheme: light)').matches
+                ? 'light'
+                : 'dark'
+          document.documentElement.dataset.theme = theme
+        } catch (e) {
+          /* first paint just uses the CSS default (dark) */
+        }
+      })()
+    </script>
   </head>
   <body>
     <div id="root"></div>

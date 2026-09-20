@@ -1605,3 +1605,233 @@ button {
     scroll-behavior: auto !important;
   }
 }
+
+/* ==========================================================================
+   Light theme.
+   The app is dark by default (tokens in :root). A user can switch to light
+   from Settings, which sets data-theme="light" on <html>. Everything that
+   uses the tokens flips automatically; the block below re-tunes the handful
+   of surfaces that were hardcoded for a dark background. Code blocks stay
+   dark on purpose (their syntax colours are tuned for a dark surface, like
+   most editors), so they are deliberately left untouched.
+   ========================================================================== */
+
+:root[data-theme='light'] {
+  --bg: #f4f6fc;
+  --bg-2: #e9edf7;
+  --panel: #ffffff;
+  --panel-2: #f4f6fc;
+  --line: rgba(15, 23, 42, 0.1);
+  --line-strong: rgba(15, 23, 42, 0.16);
+  --text: #16203a;
+  --muted: #55607d;
+  --muted-2: #7b859f;
+  --accent: #0284c7;
+  --good: #0f9d63;
+  --bad: #dc2626;
+  --warn: #b45309;
+  color-scheme: light;
+}
+
+/* Softer background wash on a light page. */
+:root[data-theme='light'] body {
+  background-image:
+    radial-gradient(900px 500px at 12% -10%, rgba(2, 132, 199, 0.1), transparent 60%),
+    radial-gradient(800px 460px at 92% 4%, rgba(124, 92, 246, 0.08), transparent 62%);
+}
+
+/* Chrome surfaces that were hardcoded as white-on-dark tints. */
+:root[data-theme='light'] .ghost {
+  background: rgba(15, 23, 42, 0.03);
+}
+:root[data-theme='light'] .ghost:hover:not(:disabled) {
+  background: rgba(15, 23, 42, 0.07);
+}
+:root[data-theme='light'] .icon-link.on,
+:root[data-theme='light'] .icon-link:hover {
+  background: rgba(15, 23, 42, 0.06);
+}
+:root[data-theme='light'] .tabs {
+  background: rgba(15, 23, 42, 0.05);
+}
+:root[data-theme='light'] .tab.on {
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.12);
+}
+:root[data-theme='light'] .auth-card {
+  background: linear-gradient(180deg, #ffffff, #f4f6fc);
+}
+:root[data-theme='light'] .auth-form input {
+  background: rgba(15, 23, 42, 0.04);
+}
+:root[data-theme='light'] .pbar-track {
+  background: rgba(15, 23, 42, 0.1);
+}
+:root[data-theme='light'] .step-map {
+  background: rgba(15, 23, 42, 0.04);
+}
+:root[data-theme='light'] .map-item:hover {
+  background: rgba(15, 23, 42, 0.06);
+}
+:root[data-theme='light'] .map-num {
+  background: rgba(15, 23, 42, 0.06);
+}
+:root[data-theme='light'] .option {
+  background: rgba(15, 23, 42, 0.02);
+}
+:root[data-theme='light'] .option:hover:not(:disabled) {
+  background: rgba(15, 23, 42, 0.05);
+}
+:root[data-theme='light'] .option-key {
+  background: rgba(15, 23, 42, 0.07);
+}
+:root[data-theme='light'] .profile-levels a:hover {
+  background: rgba(15, 23, 42, 0.05);
+}
+:root[data-theme='light'] .qcard {
+  background: rgba(15, 23, 42, 0.03);
+}
+
+/* ==========================================================================
+   Settings page
+   ========================================================================== */
+
+.settings-wrap {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.settings-section {
+  margin-top: 1.6rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, var(--panel), var(--bg-2));
+  padding: clamp(1rem, 3vw, 1.4rem);
+}
+
+.settings-section h2 {
+  margin: 0 0 0.3rem;
+  font-size: 1.1rem;
+}
+
+.settings-section .section-note {
+  margin: 0 0 1rem;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+/* Theme segmented control */
+.theme-toggle {
+  display: inline-grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.3rem;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.25rem;
+}
+
+.theme-toggle button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 1rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.theme-toggle button.on {
+  background: var(--accent);
+  color: #05070f;
+}
+
+/* Reset rows */
+.reset-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  padding: 0.6rem 0;
+  border-top: 1px solid var(--line);
+}
+
+.reset-row:first-of-type {
+  border-top: none;
+}
+
+.reset-row .rr-name {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 0.9rem;
+  min-width: 0;
+}
+
+.reset-row .rr-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  flex: none;
+  background: var(--accent);
+}
+
+.reset-row .rr-state {
+  font-size: 0.78rem;
+  color: var(--muted-2);
+}
+
+.btn-danger {
+  border: 1px solid rgba(248, 113, 113, 0.4);
+  color: var(--bad);
+  background: transparent;
+  border-radius: var(--radius-sm);
+  padding: 0.4rem 0.8rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  flex: none;
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: rgba(248, 113, 113, 0.12);
+}
+
+.btn-danger:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.btn-danger.strong {
+  border-color: var(--bad);
+  background: rgba(248, 113, 113, 0.14);
+}
+
+.settings-account {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.settings-account .sa-email {
+  font-size: 0.9rem;
+  color: var(--muted);
+  word-break: break-all;
+}
+
+.theme-icon-btn {
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: var(--muted);
+}
+
+.theme-icon-btn:hover {
+  color: var(--text);
+  background: var(--panel-2);
+}

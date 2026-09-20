@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../lib/auth'
 import { useProgress } from '../lib/progress'
+import { useTheme } from '../lib/theme'
 
 function SyncPill() {
   const { sync } = useProgress()
@@ -33,6 +34,7 @@ function SyncPill() {
 
 export function Layout({ children }: { children: ReactNode }) {
   const { user, signOut } = useAuth()
+  const { theme, toggle } = useTheme()
   const { pathname } = useLocation()
   const atHome = pathname === '/'
 
@@ -45,8 +47,20 @@ export function Layout({ children }: { children: ReactNode }) {
         </Link>
         <div className="topbar-right">
           <SyncPill />
+          <button
+            type="button"
+            className="theme-icon-btn"
+            onClick={toggle}
+            title={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
+            aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
+          >
+            {theme === 'dark' ? '☀︎' : '☾'}
+          </button>
           <Link to="/me" className={`icon-link ${pathname === '/me' ? 'on' : ''}`}>
             My progress
+          </Link>
+          <Link to="/settings" className={`icon-link ${pathname === '/settings' ? 'on' : ''}`}>
+            Settings
           </Link>
           <button type="button" className="ghost tiny" onClick={() => void signOut()}>
             Sign out
